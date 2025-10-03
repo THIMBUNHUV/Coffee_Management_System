@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:coffee_shop_app/providers/cart_provider.dart';
 import 'package:coffee_shop_app/providers/auth_provider.dart';
-import 'package:coffee_shop_app/providers/product_provider.dart';
 import 'package:coffee_shop_app/config/routes.dart';
 
 class CartScreen extends StatefulWidget {
@@ -52,8 +51,7 @@ class _CartScreenState extends State<CartScreen> {
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           AppRoutes.home,
-                          (Route<dynamic> route) =>
-                              false, // remove all previous routes
+                          (Route<dynamic> route) => false,
                         );
                       },
                       icon: const Icon(Icons.arrow_back_ios_rounded, size: 20),
@@ -61,9 +59,9 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Expanded(
+                  const Expanded(
                     child: Center(
-                      child: const Text(
+                      child: Text(
                         'My Cart',
                         style: TextStyle(
                           fontSize: 28,
@@ -74,16 +72,6 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                   ),
-                  // Text(
-                  //   'My Cart',
-                  //   style: TextStyle(
-                  //     fontSize: 28,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: const Color(0xFF2C3E50),
-                  //     fontFamily: 'Poppins',
-                  //   ),
-                  // ),
-                  // const Spacer(),
                   Consumer<CartProvider>(
                     builder: (context, cartProvider, child) {
                       if (cartProvider.cartItems.isNotEmpty) {
@@ -97,7 +85,7 @@ class _CartScreenState extends State<CartScreen> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Text(
-                            '${cartProvider.cartItems.length}',
+                            '${cartProvider.itemCount}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -117,7 +105,8 @@ class _CartScreenState extends State<CartScreen> {
             Expanded(
               child: Consumer<CartProvider>(
                 builder: (context, cartProvider, child) {
-                  if (cartProvider.isLoading) {
+                  // Show loading only on initial load
+                  if (cartProvider.isInitialLoad && cartProvider.isLoading) {
                     return const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -164,20 +153,20 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          Text(
+                          const Text(
                             'Your cart is empty',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF2C3E50),
+                              color: Color(0xFF2C3E50),
                               fontFamily: 'Poppins',
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text(
+                          const Text(
                             'Add some delicious coffees to your cart',
                             style: TextStyle(
-                              color: const Color(0xFF7F8C8D),
+                              color: Color(0xFF7F8C8D),
                               fontFamily: 'Inter',
                             ),
                           ),
@@ -258,16 +247,16 @@ class _CartScreenState extends State<CartScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Items (${cartProvider.cartItems.length})',
-                            style: TextStyle(
-                              color: const Color(0xFF7F8C8D),
+                            'Items (${cartProvider.itemCount})',
+                            style: const TextStyle(
+                              color: Color(0xFF7F8C8D),
                               fontFamily: 'Inter',
                             ),
                           ),
                           Text(
                             '\$${cartProvider.totalAmount.toStringAsFixed(2)}',
-                            style: TextStyle(
-                              color: const Color(0xFF2C3E50),
+                            style: const TextStyle(
+                              color: Color(0xFF2C3E50),
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w600,
                             ),
@@ -275,17 +264,17 @@ class _CartScreenState extends State<CartScreen> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Delivery',
                             style: TextStyle(
-                              color: const Color(0xFF7F8C8D),
+                              color: Color(0xFF7F8C8D),
                               fontFamily: 'Inter',
                             ),
                           ),
-                          const Text(
+                          Text(
                             'Free',
                             style: TextStyle(
                               color: Color(0xFF27AE60),
@@ -301,21 +290,21 @@ class _CartScreenState extends State<CartScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Total Amount',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF2C3E50),
+                              color: Color(0xFF2C3E50),
                               fontFamily: 'Poppins',
                             ),
                           ),
                           Text(
                             '\$${cartProvider.totalAmount.toStringAsFixed(2)}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF4A90E2),
+                              color: Color(0xFF4A90E2),
                               fontFamily: 'Poppins',
                             ),
                           ),
@@ -375,183 +364,214 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildCartItem(CartItem item, BuildContext context) {
-    final productProvider = Provider.of<ProductProvider>(
-      context,
-      listen: false,
-    );
+    final cartProvider = Provider.of<CartProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    
+    final product = cartProvider.getCachedProduct(item.productId);
+    final isItemLoading = cartProvider.isItemLoading(item.id!);
 
-    return FutureBuilder<Product?>(
-      future: productProvider.getProductById(item.productId),
-      builder: (context, snapshot) {
-        final product = snapshot.data;
-
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Product Image
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: const Color(0xFF4A90E2).withOpacity(0.1),
-                    image: product?.imagePath != null
-                        ? DecorationImage(
-                            image: NetworkImage(product!.imagePath!),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Product Image
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: const Color(0xFF4A90E2).withOpacity(0.1),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: product?.imagePath != null
+                  ? Image.network(
+                      product!.imagePath!,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFF4A90E2),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Center(
+                          child: Icon(
+                            Icons.coffee,
+                            color: Color(0xFF4A90E2),
+                            size: 30,
+                          ),
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: Icon(
+                        Icons.coffee,
+                        color: Color(0xFF4A90E2),
+                        size: 30,
+                      ),
+                    ),
+            ),
+
+            const SizedBox(width: 16),
+
+            // Product Details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product?.name ?? 'Loading...',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF2C3E50),
+                      fontFamily: 'Inter',
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  child: product?.imagePath == null
-                      ? const Icon(
-                          Icons.coffee,
-                          color: Color(0xFF4A90E2),
-                          size: 30,
-                        )
-                      : null,
-                ),
 
-                const SizedBox(width: 16),
+                  const SizedBox(height: 4),
 
-                // Product Details
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product?.name ?? 'Product ${item.productId}',
+                  Text(
+                    '\$${(item.price ?? 0).toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4A90E2),
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+
+                  if (item.customization != null &&
+                      item.customization!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        item.customization!,
                         style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2C3E50),
+                          color: Color(0xFF7F8C8D),
+                          fontSize: 12,
                           fontFamily: 'Inter',
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
+                    ),
 
-                      const SizedBox(height: 4),
+                  const SizedBox(height: 8),
 
-                      Text(
-                        '\$${(item.price ?? 0).toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF4A90E2),
-                          fontFamily: 'Inter',
+                  // Quantity Controls
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF4A90E2).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ),
-
-                      if (item.customization != null &&
-                          item.customization!.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text(
-                            item.customization!,
-                            style: TextStyle(
-                              color: const Color(0xFF7F8C8D),
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-
-                      const SizedBox(height: 8),
-
-                      // Quantity Controls
-                      Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF4A90E2).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.remove, size: 18),
-                                  onPressed: () async {
-                                    if (item.quantity > 1) {
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.remove, size: 18),
+                              onPressed: isItemLoading || item.quantity <= 1
+                                  ? null
+                                  : () async {
                                       await cartProvider.updateQuantity(
                                         item.id!,
                                         authProvider.customer!.id!,
                                         item.quantity - 1,
                                       );
-                                    }
-                                  },
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(
-                                    minWidth: 32,
-                                    minHeight: 32,
-                                  ),
-                                ),
-                                Text(
-                                  item.quantity.toString(),
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Inter',
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.add, size: 18),
-                                  onPressed: () async {
-                                    await cartProvider.updateQuantity(
-                                      item.id!,
-                                      authProvider.customer!.id!,
-                                      item.quantity + 1,
-                                    );
-                                  },
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(
-                                    minWidth: 32,
-                                    minHeight: 32,
-                                  ),
-                                ),
-                              ],
+                                    },
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                minWidth: 32,
+                                minHeight: 32,
+                              ),
                             ),
-                          ),
+                            isItemLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Color(0xFF4A90E2),
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    item.quantity.toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                            IconButton(
+                              icon: const Icon(Icons.add, size: 18),
+                              onPressed: isItemLoading
+                                  ? null
+                                  : () async {
+                                      await cartProvider.updateQuantity(
+                                        item.id!,
+                                        authProvider.customer!.id!,
+                                        item.quantity + 1,
+                                      );
+                                    },
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                minWidth: 32,
+                                minHeight: 32,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
-                          const Spacer(),
+                      const Spacer(),
 
-                          // Delete Button
-                          IconButton(
-                            onPressed: () async {
-                              await _showDeleteDialog(
-                                item,
-                                authProvider.customer!.id!,
-                              );
-                            },
-                            icon: const Icon(Icons.delete_outline),
-                            color: const Color(0xFFE74C3C),
-                          ),
-                        ],
+                      // Delete Button
+                      IconButton(
+                        onPressed: isItemLoading
+                            ? null
+                            : () async {
+                                await _showDeleteDialog(
+                                  item,
+                                  authProvider.customer!.id!,
+                                );
+                              },
+                        icon: const Icon(Icons.delete_outline),
+                        color: const Color(0xFFE74C3C),
                       ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 

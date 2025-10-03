@@ -117,10 +117,6 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => const EmployeeManagementScreen(),
         );
-      case ownerProductManagement:
-        return MaterialPageRoute(
-          builder: (_) => const OwnerProductManagementScreen(),
-        );
       case ownerProifle:
         return MaterialPageRoute(builder: (_) => OwnerProfileScreen());
       case inventory:

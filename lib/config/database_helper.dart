@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'coffee_app.db');
     return await openDatabase(
       path,
-      version: 20, // Incremented version for dual image support
+      version: 21, // Incremented version for dual image support
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -300,9 +300,7 @@ class DatabaseHelper {
     // ✅ NEW: Add image_path column for version 20
     if (oldVersion < 20) {
       try {
-        await db.execute(
-          'ALTER TABLE tblProduct ADD COLUMN image_path TEXT',
-        );
+        await db.execute('ALTER TABLE tblProduct ADD COLUMN image_path TEXT');
         print('Added image_path column to tblProduct');
       } catch (e) {
         print('Error adding image_path column: $e');
@@ -377,7 +375,9 @@ class DatabaseHelper {
 
   Future<void> _insertSampleData(Database db) async {
     // Insert sample customers
-    final List<Map<String, dynamic>> existingCustomers = await db.query('tblCustomer');
+    final List<Map<String, dynamic>> existingCustomers = await db.query(
+      'tblCustomer',
+    );
     if (existingCustomers.isEmpty) {
       await db.insert('tblCustomer', {
         'name': 'Thim Bunhuv',
@@ -389,7 +389,9 @@ class DatabaseHelper {
     }
 
     // Insert sample employees
-    final List<Map<String, dynamic>> existingEmployees = await db.query('tblEmployee');
+    final List<Map<String, dynamic>> existingEmployees = await db.query(
+      'tblEmployee',
+    );
     if (existingEmployees.isEmpty) {
       await db.insert('tblEmployee', {
         'name': 'Seng Ratana',
@@ -403,7 +405,9 @@ class DatabaseHelper {
     }
 
     // Insert sample owner
-    final List<Map<String, dynamic>> existingOwners = await db.query('tblOwner');
+    final List<Map<String, dynamic>> existingOwners = await db.query(
+      'tblOwner',
+    );
     if (existingOwners.isEmpty) {
       await db.insert('tblOwner', {
         'name': 'Sok Dara',
@@ -416,7 +420,9 @@ class DatabaseHelper {
     }
 
     // Insert sample products
-    final List<Map<String, dynamic>> existingProducts = await db.query('tblProduct');
+    final List<Map<String, dynamic>> existingProducts = await db.query(
+      'tblProduct',
+    );
     if (existingProducts.isNotEmpty) {
       return;
     }
@@ -427,7 +433,8 @@ class DatabaseHelper {
         'description': 'Strong and bold coffee shot',
         'category': 'Espresso',
         'price': 2.50,
-        'image': 'https://media.istockphoto.com/id/136625069/photo/coffee-espresso.jpg?s=612x612&w=0&k=20&c=qsAwchQa1ExewNpHaaxUAElBSXs6f9u81QyMSjjW7Xc=',
+        'image':
+            'https://media.istockphoto.com/id/136625069/photo/coffee-espresso.jpg?s=612x612&w=0&k=20&c=qsAwchQa1ExewNpHaaxUAElBSXs6f9u81QyMSjjW7Xc=',
         'image_path': null,
       },
       {
@@ -443,7 +450,8 @@ class DatabaseHelper {
         'description': 'Espresso with a dollop of foamed milk',
         'category': 'Macchiato',
         'price': 3.75,
-        'image': 'https://img.freepik.com/free-photo/delicious-quality-coffee-cup_23-2150691325.jpg?semt=ais_hybrid&w=740',
+        'image':
+            'https://img.freepik.com/free-photo/delicious-quality-coffee-cup_23-2150691325.jpg?semt=ais_hybrid&w=740',
         'image_path': null,
       },
       {
@@ -451,7 +459,8 @@ class DatabaseHelper {
         'description': 'Similar to latte but with less foam',
         'category': 'Flat White',
         'price': 4.25,
-        'image': 'https://img.freepik.com/premium-photo/flat-white-coffee_488220-3363.jpg',
+        'image':
+            'https://img.freepik.com/premium-photo/flat-white-coffee_488220-3363.jpg',
         'image_path': null,
       },
       {
@@ -459,7 +468,8 @@ class DatabaseHelper {
         'description': 'Coffee with Irish whiskey and cream',
         'category': 'Specialty',
         'price': 6.00,
-        'image': 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
+        'image':
+            'https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
         'image_path': null,
       },
       {
@@ -467,7 +477,8 @@ class DatabaseHelper {
         'description': 'Espresso with steamed milk foam',
         'category': 'Cappuccino',
         'price': 3.50,
-        'image': 'https://houseofcocoa.net/cdn/shop/products/Cappuccino.jpg?v=1655998082',
+        'image':
+            'https://houseofcocoa.net/cdn/shop/products/Cappuccino.jpg?v=1655998082',
         'image_path': null,
       },
       {
@@ -475,7 +486,8 @@ class DatabaseHelper {
         'description': 'Espresso with steamed milk',
         'category': 'Latte',
         'price': 4.00,
-        'image': 'https://originalsin.com.sg/wp-content/uploads/2025/05/cafe-latte-recipe-1746593903.jpg',
+        'image':
+            'https://originalsin.com.sg/wp-content/uploads/2025/05/cafe-latte-recipe-1746593903.jpg',
         'image_path': null,
       },
       {
@@ -483,31 +495,27 @@ class DatabaseHelper {
         'description': 'Espresso with chocolate and steamed milk',
         'category': 'Mocha',
         'price': 4.50,
-        'image': 'https://www.canterburycoffee.com/wp-content/uploads/2023/07/Hazy-Mocha-AdobeStock_466356719-scaled.jpeg',
+        'image':
+            'https://www.canterburycoffee.com/wp-content/uploads/2023/07/Hazy-Mocha-AdobeStock_466356719-scaled.jpeg',
         'image_path': null,
       },
       {
         'name': 'Cold Brew',
         'description': 'Smooth coffee brewed with cold water',
         'category': 'Cold Coffee',
-        'price': 4.25,
-        'image': 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&h=500&fit=crop&bg=white',
+        'price': 3.25,
+        'image':
+            'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&h=500&fit=crop&bg=white',
         'image_path': null,
       },
-      {
-        'name': 'Iced Coffee',
-        'description': 'Chilled coffee with ice cubes',
-        'category': 'Cold Coffee',
-        'price': 3.75,
-        'image': 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&h=500&fit=crop&bg=white',
-        'image_path': null,
-      },
+
       {
         'name': 'Caramel Macchiato',
         'description': 'Espresso with caramel and steamed milk',
         'category': 'Macchiato',
         'price': 4.75,
-        'image': 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500&h=500&fit=crop&bg=white',
+        'image':
+            'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500&h=500&fit=crop&bg=white',
         'image_path': null,
       },
     ];
@@ -717,7 +725,10 @@ class DatabaseHelper {
 
   // ========== IMAGE MANAGEMENT ==========
   // Customer image methods
-  Future<void> updateCustomerProfileImage(int customerId, String imagePath) async {
+  Future<void> updateCustomerProfileImage(
+    int customerId,
+    String imagePath,
+  ) async {
     final db = await database;
     await db.update(
       'tblCustomer',
@@ -742,7 +753,10 @@ class DatabaseHelper {
   }
 
   // Employee image methods
-  Future<void> updateEmployeeProfileImage(int employeeId, String imagePath) async {
+  Future<void> updateEmployeeProfileImage(
+    int employeeId,
+    String imagePath,
+  ) async {
     final db = await database;
     await db.update(
       'tblEmployee',
@@ -796,21 +810,31 @@ class DatabaseHelper {
     final db = await database;
 
     // Total purchases count
-    final totalCountResult = await db.rawQuery('SELECT COUNT(*) as count FROM tblPurchase');
+    final totalCountResult = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM tblPurchase',
+    );
     final totalCount = totalCountResult.first['count'] as int? ?? 0;
 
     // Total amount
-    final totalAmountResult = await db.rawQuery('SELECT SUM(total_price) as total FROM tblPurchase');
-    final totalAmount = (totalAmountResult.first['total'] as num?)?.toDouble() ?? 0.0;
+    final totalAmountResult = await db.rawQuery(
+      'SELECT SUM(total_price) as total FROM tblPurchase',
+    );
+    final totalAmount =
+        (totalAmountResult.first['total'] as num?)?.toDouble() ?? 0.0;
 
     // This month total
     final thisMonth = DateTime.now();
-    final firstDayOfMonth = DateTime(thisMonth.year, thisMonth.month, 1).toIso8601String();
+    final firstDayOfMonth = DateTime(
+      thisMonth.year,
+      thisMonth.month,
+      1,
+    ).toIso8601String();
     final thisMonthAmountResult = await db.rawQuery(
       'SELECT SUM(total_price) as total FROM tblPurchase WHERE purchase_date >= ?',
       [firstDayOfMonth],
     );
-    final thisMonthAmount = (thisMonthAmountResult.first['total'] as num?)?.toDouble() ?? 0.0;
+    final thisMonthAmount =
+        (thisMonthAmountResult.first['total'] as num?)?.toDouble() ?? 0.0;
 
     // Pending purchases count
     final pendingCountResult = await db.rawQuery(
