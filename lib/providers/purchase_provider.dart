@@ -1,8 +1,8 @@
 
 // purchase_provider.dart
-import 'package:coffee_shop_app/config/database_helper.dart';
+import 'package:vee_zee_coffee/config/database_helper.dart';
 import 'package:flutter/foundation.dart';
-import 'package:coffee_shop_app/models/purchase_model.dart';
+import 'package:vee_zee_coffee/models/purchase_model.dart';
 
 // Update your PurchaseProvider with new methods
 class PurchaseProvider with ChangeNotifier {

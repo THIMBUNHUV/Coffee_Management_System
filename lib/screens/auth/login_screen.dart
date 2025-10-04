@@ -1,8 +1,9 @@
+import 'package:vee_zee_coffee/screens/auth/forget_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/auth_provider.dart';
-import 'package:coffee_shop_app/config/routes.dart';
-import 'package:coffee_shop_app/utils/validators.dart';
+import 'package:vee_zee_coffee/providers/auth_provider.dart';
+import 'package:vee_zee_coffee/config/routes.dart';
+import 'package:vee_zee_coffee/utils/validators.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -67,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 24),
                       Text(
-                        'Welcome Back',
+                        'Welcome ',
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -126,17 +127,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text(
-                                    'Forgot password feature coming soon!',
-                                  ),
-                                  backgroundColor: Colors.blue[600],
-                                  behavior: SnackBarBehavior.floating,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.forgotPassword,
                               );
                             },
                             child: Text(

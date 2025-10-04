@@ -62,4 +62,16 @@ class Customer {
     );
   }
 
+  // Add this factory constructor to your Customer class
+factory Customer.empty() {
+  return Customer(
+    id: null,
+    name: '',
+    email: '',
+    password: '',
+    phone: null,
+    address: null,
+  );
+}
+
 }

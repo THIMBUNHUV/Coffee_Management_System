@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:coffee_shop_app/models/order_model.dart';
-import 'package:coffee_shop_app/widgets/status_indicator.dart';
+import 'package:vee_zee_coffee/models/order_model.dart';
+import 'package:vee_zee_coffee/widgets/status_indicator.dart';
 
 class OrderCard extends StatelessWidget {
   final Order order;

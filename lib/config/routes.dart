@@ -1,37 +1,41 @@
-import 'package:coffee_shop_app/models/order_model.dart';
-import 'package:coffee_shop_app/models/product_model.dart';
-import 'package:coffee_shop_app/screens/debug/users_screen.dart';
-import 'package:coffee_shop_app/screens/employee/employee_profile_screen.dart';
-import 'package:coffee_shop_app/screens/owner/owner_profile_screen.dart';
+import 'package:vee_zee_coffee/models/order_model.dart';
+import 'package:vee_zee_coffee/models/product_model.dart';
+import 'package:vee_zee_coffee/screens/auth/forget_password_screen.dart';
+import 'package:vee_zee_coffee/screens/auth/reset_password_screen.dart';
+import 'package:vee_zee_coffee/screens/debug/users_screen.dart';
+import 'package:vee_zee_coffee/screens/employee/employee_profile_screen.dart';
+import 'package:vee_zee_coffee/screens/owner/owner_profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:coffee_shop_app/screens/auth/login_screen.dart';
-import 'package:coffee_shop_app/screens/auth/register_screen.dart';
-import 'package:coffee_shop_app/screens/auth/splash_screen.dart';
-import 'package:coffee_shop_app/screens/customer/home_screen.dart';
-import 'package:coffee_shop_app/screens/customer/menu_screen.dart';
-import 'package:coffee_shop_app/screens/customer/coffee_detail_screen.dart';
-import 'package:coffee_shop_app/screens/customer/cart_screen.dart';
-import 'package:coffee_shop_app/screens/customer/checkout_screen.dart';
-import 'package:coffee_shop_app/screens/customer/delivery_screen.dart';
-import 'package:coffee_shop_app/screens/customer/payment_screen.dart';
-import 'package:coffee_shop_app/screens/customer/order_tracking_screen.dart';
-import 'package:coffee_shop_app/screens/customer/profile_screen.dart';
-import 'package:coffee_shop_app/screens/customer/favorites_screen.dart';
-import 'package:coffee_shop_app/screens/employee/employee_home_screen.dart';
-import 'package:coffee_shop_app/screens/employee/orders_dashboard_screen.dart';
-import 'package:coffee_shop_app/screens/employee/order_detail_screen.dart';
-import 'package:coffee_shop_app/screens/employee/product_management_screen.dart';
-import 'package:coffee_shop_app/screens/employee/purchase_management_screen.dart';
-import 'package:coffee_shop_app/screens/employee/receive_purchase_screen.dart';
-import 'package:coffee_shop_app/screens/owner/dashboard_screen.dart';
-import 'package:coffee_shop_app/screens/owner/employee_management_screen.dart';
-import 'package:coffee_shop_app/screens/owner/product_management_screen.dart';
-import 'package:coffee_shop_app/screens/owner/inventory_screen.dart';
+import 'package:vee_zee_coffee/screens/auth/login_screen.dart';
+import 'package:vee_zee_coffee/screens/auth/register_screen.dart';
+import 'package:vee_zee_coffee/screens/auth/splash_screen.dart';
+import 'package:vee_zee_coffee/screens/customer/home_screen.dart';
+import 'package:vee_zee_coffee/screens/customer/menu_screen.dart';
+import 'package:vee_zee_coffee/screens/customer/coffee_detail_screen.dart';
+import 'package:vee_zee_coffee/screens/customer/cart_screen.dart';
+import 'package:vee_zee_coffee/screens/customer/checkout_screen.dart';
+import 'package:vee_zee_coffee/screens/customer/delivery_screen.dart';
+import 'package:vee_zee_coffee/screens/customer/payment_screen.dart';
+import 'package:vee_zee_coffee/screens/customer/order_tracking_screen.dart';
+import 'package:vee_zee_coffee/screens/customer/profile_screen.dart';
+import 'package:vee_zee_coffee/screens/customer/favorites_screen.dart';
+import 'package:vee_zee_coffee/screens/employee/employee_home_screen.dart';
+import 'package:vee_zee_coffee/screens/employee/orders_dashboard_screen.dart';
+import 'package:vee_zee_coffee/screens/employee/order_detail_screen.dart';
+import 'package:vee_zee_coffee/screens/employee/product_management_screen.dart';
+import 'package:vee_zee_coffee/screens/employee/purchase_management_screen.dart';
+import 'package:vee_zee_coffee/screens/employee/receive_purchase_screen.dart';
+import 'package:vee_zee_coffee/screens/owner/dashboard_screen.dart';
+import 'package:vee_zee_coffee/screens/owner/employee_management_screen.dart';
+import 'package:vee_zee_coffee/screens/owner/inventory_screen.dart';
+import 'package:path/path.dart';
 
 class AppRoutes {
   static const String splash = '/';
   static const String login = '/login';
   static const String register = '/register';
+  static const String forgotPassword = '/forgot-password';
+  static const String resetPassword = '/reset-password';
   static const String home = '/home';
   static const String menu = '/menu';
   static const String coffeeDetail = '/coffee-detail';
@@ -65,6 +69,15 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case register:
         return MaterialPageRoute(builder: (_) => const RegisterScreen());
+      case forgotPassword:
+        return MaterialPageRoute(builder: (_) => ForgotPasswordScreen());
+      case resetPassword:
+        return MaterialPageRoute(
+          builder: (_) => ResetPasswordScreen(
+            email: ModalRoute.of(context as BuildContext)!.settings.arguments as String? ?? '',
+           
+          ),
+        );
       case home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case menu:

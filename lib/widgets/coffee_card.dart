@@ -1,6 +1,6 @@
-import 'package:coffee_shop_app/models/product_model.dart';
+import 'package:vee_zee_coffee/models/product_model.dart';
 import 'package:flutter/material.dart';
-import 'package:coffee_shop_app/models/product_model.dart';
+import 'package:vee_zee_coffee/models/product_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CoffeeCard extends StatelessWidget {

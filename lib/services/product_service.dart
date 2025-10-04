@@ -1,10 +1,10 @@
 
 import 'dart:io';
 
-import 'package:coffee_shop_app/config/database_helper.dart';
-import 'package:coffee_shop_app/models/category_model.dart';
-import 'package:coffee_shop_app/models/product_model.dart';
-import 'package:coffee_shop_app/services/image_service.dart';
+import 'package:vee_zee_coffee/config/database_helper.dart';
+import 'package:vee_zee_coffee/models/category_model.dart';
+import 'package:vee_zee_coffee/models/product_model.dart';
+import 'package:vee_zee_coffee/services/image_service.dart';
 
 class ProductService {
   final DatabaseHelper _dbHelper = DatabaseHelper();

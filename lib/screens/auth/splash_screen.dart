@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coffee_shop_app/config/routes.dart';
+import 'package:vee_zee_coffee/config/routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,34 +32,25 @@ class _SplashScreenState extends State<SplashScreen>
     _scaleAnimation = Tween<double>(
       begin: 0.5,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInCubic));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutBack,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
-    _colorAnimation = ColorTween(
-      begin: const Color(0xFF4A90E2).withOpacity(0.7),
-      end: const Color(0xFF4A90E2),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOutCubic,
-    ));
+    _colorAnimation =
+        ColorTween(
+          begin: const Color(0xFF4A90E2).withOpacity(0.7),
+          end: const Color(0xFF4A90E2),
+        ).animate(
+          CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
+        );
 
     _controller.forward();
   }
@@ -102,7 +93,9 @@ class _SplashScreenState extends State<SplashScreen>
                   // Coffee cup with steam animation
                   Stack(
                     alignment: Alignment.center,
+                    clipBehavior: Clip.none, // Important: Allow steam to overflow
                     children: [
+                      // Coffee icon container
                       Transform.scale(
                         scale: _scaleAnimation.value,
                         child: Container(
@@ -135,18 +128,18 @@ class _SplashScreenState extends State<SplashScreen>
                           ),
                         ),
                       ),
-                      
-                      // Steam animation
+
+                      // Steam animation - positioned above the coffee icon
                       if (_controller.status == AnimationStatus.completed)
                         Positioned(
-                          top: -50,
+                          top: -60, // Moved higher to avoid overlap
                           child: _SteamAnimation(controller: _controller),
                         ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 50),
-                  
+
                   // Brand name with slide and fade animation
                   SlideTransition(
                     position: _slideAnimation,
@@ -171,7 +164,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ),
                   ),
-                  
+
                   SlideTransition(
                     position: _slideAnimation,
                     child: FadeTransition(
@@ -195,9 +188,9 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 30),
-                  
+
                   // Tagline
                   FadeTransition(
                     opacity: _fadeAnimation,
@@ -212,9 +205,9 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 40),
-                  
+
                   // Loading indicator
                   FadeTransition(
                     opacity: _fadeAnimation,
@@ -230,9 +223,9 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 25),
-                  
+
                   // Loading text
                   FadeTransition(
                     opacity: _fadeAnimation,
@@ -278,21 +271,13 @@ class _SteamAnimationState extends State<_SteamAnimation>
       vsync: this,
     )..repeat(reverse: true);
 
-    _steamOpacity = Tween<double>(
-      begin: 0.2,
-      end: 0.7,
-    ).animate(CurvedAnimation(
-      parent: _steamController,
-      curve: Curves.easeInOutCubic,
-    ));
+    _steamOpacity = Tween<double>(begin: 0.2, end: 0.7).animate(
+      CurvedAnimation(parent: _steamController, curve: Curves.easeInOutCubic),
+    );
 
-    _steamHeight = Tween<double>(
-      begin: 25,
-      end: 50,
-    ).animate(CurvedAnimation(
-      parent: _steamController,
-      curve: Curves.easeInOutCubic,
-    ));
+    _steamHeight = Tween<double>(begin: 25, end: 50).animate(
+      CurvedAnimation(parent: _steamController, curve: Curves.easeInOutCubic),
+    );
   }
 
   @override
@@ -333,9 +318,9 @@ class _SteamAnimationState extends State<_SteamAnimation>
         final adjustedValue = (_steamController.value + delay) % 1.0;
         final height = _steamHeight.value * (0.5 + adjustedValue * 0.5);
         final opacity = 0.8 * adjustedValue;
-        
+
         return Container(
-          width: 8,
+          width: 6, // Reduced width for better appearance
           height: height,
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -347,14 +332,7 @@ class _SteamAnimationState extends State<_SteamAnimation>
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
             ),
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(opacity * 0.3),
-                blurRadius: 8,
-                spreadRadius: 1,
-              ),
-            ],
+            borderRadius: BorderRadius.circular(3), // Adjusted border radius
           ),
         );
       },

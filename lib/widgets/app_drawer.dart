@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:coffee_shop_app/config/routes.dart';
+import 'package:vee_zee_coffee/config/routes.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/auth_provider.dart';
+import 'package:vee_zee_coffee/providers/auth_provider.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});

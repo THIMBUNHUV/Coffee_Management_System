@@ -1,6 +1,6 @@
-import 'package:coffee_shop_app/config/database_helper.dart';
-import 'package:coffee_shop_app/models/purchase_model.dart';
-import 'package:coffee_shop_app/models/receive_model.dart';
+import 'package:vee_zee_coffee/config/database_helper.dart';
+import 'package:vee_zee_coffee/models/purchase_model.dart';
+import 'package:vee_zee_coffee/models/receive_model.dart';
 
 class PurchaseService {
   final DatabaseHelper _dbHelper = DatabaseHelper();

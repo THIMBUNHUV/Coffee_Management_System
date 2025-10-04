@@ -1,5 +1,5 @@
-import 'package:coffee_shop_app/config/database_helper.dart';
-import 'package:coffee_shop_app/models/cart_model.dart';
+import 'package:vee_zee_coffee/config/database_helper.dart';
+import 'package:vee_zee_coffee/models/cart_model.dart';
 
 class CartService {
   final DatabaseHelper _dbHelper = DatabaseHelper();

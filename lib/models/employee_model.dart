@@ -74,4 +74,19 @@ class Employee {
 
     );
   }
+
+  // Add this factory constructor to your Employee class
+factory Employee.empty() {
+  return Employee(
+    id: null,
+    name: '',
+    email: '',
+    password: '',
+    role: '',
+    phone: null,
+    address: null,
+    salary: null,
+    
+  );
+}
 }

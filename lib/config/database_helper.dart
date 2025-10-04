@@ -1,7 +1,7 @@
-import 'package:coffee_shop_app/models/customer_model.dart';
-import 'package:coffee_shop_app/models/employee_model.dart';
-import 'package:coffee_shop_app/models/owner_model.dart';
-import 'package:coffee_shop_app/models/purchase_model.dart';
+import 'package:vee_zee_coffee/models/customer_model.dart';
+import 'package:vee_zee_coffee/models/employee_model.dart';
+import 'package:vee_zee_coffee/models/owner_model.dart';
+import 'package:vee_zee_coffee/models/purchase_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'coffee_app.db');
     return await openDatabase(
       path,
-      version: 21, // Incremented version for dual image support
+      version: 22, // Incremented version for dual image support
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -388,6 +388,8 @@ class DatabaseHelper {
       });
     }
 
+
+
     // Insert sample employees
     final List<Map<String, dynamic>> existingEmployees = await db.query(
       'tblEmployee',
@@ -525,6 +527,14 @@ class DatabaseHelper {
     }
   }
 
+// ========== EMPLOYEE CRUD OPERATIONS ==========
+
+  Future<List<Customer>> getCustomers() async {
+  final db = await database;
+  final List<Map<String, dynamic>> maps = await db.query('tblCustomer');
+  return List.generate(maps.length, (i) => Customer.fromMap(maps[i]));
+}
+
   // ========== EMPLOYEE CRUD OPERATIONS ==========
   Future<int> insertEmployee(Employee employee) async {
     final db = await database;
@@ -538,6 +548,19 @@ class DatabaseHelper {
       return Employee.fromMap(maps[i]);
     });
   }
+
+  Future<Employee?> getEmployeeByEmail(String email) async {
+  final db = await database;
+  final List<Map<String, dynamic>> maps = await db.query(
+    'tblEmployee',
+    where: 'email = ?',
+    whereArgs: [email],
+  );
+  if (maps.isNotEmpty) {
+    return Employee.fromMap(maps.first);
+  }
+  return null;
+}
 
   Future<int> updateEmployee(Employee employee) async {
     final db = await database;
@@ -577,6 +600,12 @@ class DatabaseHelper {
       whereArgs: [owner.id],
     );
   }
+
+  Future<List<Owner>> getOwners() async {
+  final db = await database;
+  final List<Map<String, dynamic>> maps = await db.query('tblOwner');
+  return List.generate(maps.length, (i) => Owner.fromMap(maps[i]));
+}
 
   Future<Owner?> getOwnerById(int id) async {
     final db = await database;

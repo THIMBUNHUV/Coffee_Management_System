@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/cart_provider.dart';
-import 'package:coffee_shop_app/providers/auth_provider.dart';
-import 'package:coffee_shop_app/providers/order_provider.dart';
-import 'package:coffee_shop_app/models/order_model.dart';
-import 'package:coffee_shop_app/models/cart_model.dart';
-import 'package:coffee_shop_app/config/routes.dart';
+import 'package:vee_zee_coffee/providers/cart_provider.dart';
+import 'package:vee_zee_coffee/providers/auth_provider.dart';
+import 'package:vee_zee_coffee/providers/order_provider.dart';
+import 'package:vee_zee_coffee/models/order_model.dart';
+import 'package:vee_zee_coffee/models/cart_model.dart';
+import 'package:vee_zee_coffee/config/routes.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -62,16 +62,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  // const Text(
-                  //   'Checkout',
-                  //   style: TextStyle(
-                  //     fontSize: 28,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: Color(0xFF2C3E50),
-                  //     fontFamily: 'Poppins',
-                  //   ),
-                  // ),
-                  // const Spacer(),
+                  
                   Expanded(
                     child: Center(
                       child: const Text(

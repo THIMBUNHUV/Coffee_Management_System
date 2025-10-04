@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/order_provider.dart';
-import 'package:coffee_shop_app/models/order_model.dart';
+import 'package:vee_zee_coffee/providers/order_provider.dart';
+import 'package:vee_zee_coffee/models/order_model.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final Order order;

@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/purchase_provider.dart';
-import 'package:coffee_shop_app/models/purchase_model.dart';
-import 'package:coffee_shop_app/config/database_helper.dart';
+import 'package:vee_zee_coffee/providers/purchase_provider.dart';
+import 'package:vee_zee_coffee/models/purchase_model.dart';
+import 'package:vee_zee_coffee/config/database_helper.dart';
 
 class PurchaseManagementScreen extends StatefulWidget {
   const PurchaseManagementScreen({super.key});

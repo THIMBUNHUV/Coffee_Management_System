@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:coffee_shop_app/config/routes.dart';
-import 'package:coffee_shop_app/config/theme.dart';
-import 'package:coffee_shop_app/config/database_helper.dart';
+import 'package:vee_zee_coffee/config/routes.dart';
+import 'package:vee_zee_coffee/config/theme.dart';
+import 'package:vee_zee_coffee/config/database_helper.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/auth_provider.dart';
-import 'package:coffee_shop_app/providers/cart_provider.dart';
-import 'package:coffee_shop_app/providers/order_provider.dart';
-import 'package:coffee_shop_app/providers/product_provider.dart';
-import 'package:coffee_shop_app/providers/purchase_provider.dart';
+import 'package:vee_zee_coffee/providers/auth_provider.dart';
+import 'package:vee_zee_coffee/providers/cart_provider.dart';
+import 'package:vee_zee_coffee/providers/order_provider.dart';
+import 'package:vee_zee_coffee/providers/product_provider.dart';
+import 'package:vee_zee_coffee/providers/purchase_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:coffee_shop_app/config/routes.dart';
+import 'package:vee_zee_coffee/config/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/models/product_model.dart';
-import 'package:coffee_shop_app/models/cart_model.dart';
-import 'package:coffee_shop_app/providers/cart_provider.dart';
-import 'package:coffee_shop_app/providers/auth_provider.dart';
+import 'package:vee_zee_coffee/models/product_model.dart';
+import 'package:vee_zee_coffee/models/cart_model.dart';
+import 'package:vee_zee_coffee/providers/cart_provider.dart';
+import 'package:vee_zee_coffee/providers/auth_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CoffeeDetailScreen extends StatefulWidget {
@@ -103,79 +103,6 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     children: [
-                      // Product Image
-                      // Container(
-                      //   decoration: const BoxDecoration(
-                      //     gradient: LinearGradient(
-                      //       begin: Alignment.topCenter,
-                      //       end: Alignment.bottomCenter,
-                      //       colors: [Color(0xFF2C3E50), Color(0xFF4A90E2)],
-                      //     ),
-                      //   ),
-                      //   child: widget.product.imagePath != null
-                      //       ? CachedNetworkImage(
-                      //           imageUrl: widget.product.imagePath!,
-                      //           fit: BoxFit.cover,
-                      //           width: double.infinity,
-                      //           height: double.infinity,
-                      //           placeholder: (context, url) => Container(
-                      //             color: const Color(
-                      //               0xFF4A90E2,
-                      //             ).withOpacity(0.1),
-                      //             child: const Center(
-                      //               child: CircularProgressIndicator(
-                      //                 valueColor: AlwaysStoppedAnimation<Color>(
-                      //                   Color(0xFF4A90E2),
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //           ),
-                      //           errorWidget: (context, url, error) => Container(
-                      //             color: const Color(
-                      //               0xFF4A90E2,
-                      //             ).withOpacity(0.1),
-                      //             child: const Column(
-                      //               mainAxisAlignment: MainAxisAlignment.center,
-                      //               children: [
-                      //                 Icon(
-                      //                   Icons.coffee_maker_outlined,
-                      //                   size: 80,
-                      //                   color: Colors.white,
-                      //                 ),
-                      //                 SizedBox(height: 8),
-                      //                 Text(
-                      //                   'Coffee Image',
-                      //                   style: TextStyle(
-                      //                     color: Colors.white,
-                      //                     fontWeight: FontWeight.w500,
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //           ),
-                      //         )
-                      //       : Container(
-                      //           color: const Color(0xFF4A90E2).withOpacity(0.1),
-                      //           child: const Column(
-                      //             mainAxisAlignment: MainAxisAlignment.center,
-                      //             children: [
-                      //               Icon(
-                      //                 Icons.coffee_maker_outlined,
-                      //                 size: 80,
-                      //                 color: Colors.white,
-                      //               ),
-                      //               SizedBox(height: 8),
-                      //               Text(
-                      //                 'Coffee Image',
-                      //                 style: TextStyle(
-                      //                   color: Colors.white,
-                      //                   fontWeight: FontWeight.w500,
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      // ),
                       Container(
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
@@ -220,8 +147,6 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
                               )
                             : _buildFallbackImage(),
                       ),
-
-                      // Don't forget to add this helper method
 
                       // Gradient Overlay
                       Container(
@@ -648,23 +573,44 @@ class _CoffeeDetailScreenState extends State<CoffeeDetailScreen> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () async {
-                      if (authProvider.customer != null) {
-                        final customization =
-                            'Size: $_selectedSize, Milk: $_selectedMilk, Sugar: $_sugarLevel, Toppings: ${_toppings.join(", ")}';
-                        final cartItem = CartItem(
-                          customerId: authProvider.customer!.id!,
-                          productId: widget.product.id!,
-                          quantity: _quantity,
-                          customization: customization,
-                          dateAdded: DateTime.now().toIso8601String(),
-                          price: widget.product.price,
-                        );
-                        await cartProvider.addToCart(cartItem);
+                    // onPressed: () async {
+                    //   if (authProvider.customer != null) {
+                    //     final customization =
+                    //         'Size: $_selectedSize, Milk: $_selectedMilk, Sugar: $_sugarLevel, Toppings: ${_toppings.join(", ")}';
+                    //     final cartItem = CartItem(
+                    //       customerId: authProvider.customer!.id!,
+                    //       productId: widget.product.id!,
+                    //       quantity: _quantity,
+                    //       customization: customization,
+                    //       dateAdded: DateTime.now().toIso8601String(),
+                    //       price: widget.product.price,
+                    //     );
+                    //     await cartProvider.addToCart(cartItem);
 
-                        Navigator.pushNamed(context, AppRoutes.cart);
-                      }
-                    },
+                    //     Navigator.pushNamed(context, AppRoutes.cart);
+                    //   }
+                    // },
+                    // In CoffeeDetailScreen addToCart button
+onPressed: () async {
+  if (authProvider.customer != null) {
+    final customization = 'Size: $_selectedSize, Milk: $_selectedMilk, Sugar: $_sugarLevel, Toppings: ${_toppings.join(", ")}';
+    final cartItem = CartItem(
+      customerId: authProvider.customer!.id!,
+      productId: widget.product.id!,
+      quantity: _quantity,
+      customization: customization,
+      dateAdded: DateTime.now().toIso8601String(),
+      price: widget.product.price,
+      product: widget.product, // Add product reference
+    );
+    
+    await cartProvider.addToCart(cartItem, widget.product); // Pass both parameters
+    
+    if (mounted) {
+      Navigator.pushNamed(context, AppRoutes.cart);
+    }
+  }
+},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4A90E2),
                       foregroundColor: Colors.white,

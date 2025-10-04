@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:coffee_shop_app/config/routes.dart';
-import 'package:coffee_shop_app/config/database_helper.dart';
+import 'package:vee_zee_coffee/config/routes.dart';
+import 'package:vee_zee_coffee/config/database_helper.dart';
 
-import 'package:coffee_shop_app/widgets/app_drawer.dart';
+import 'package:vee_zee_coffee/widgets/app_drawer.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/product_provider.dart';
-import 'package:coffee_shop_app/models/product_model.dart';
+import 'package:vee_zee_coffee/providers/product_provider.dart';
+import 'package:vee_zee_coffee/models/product_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

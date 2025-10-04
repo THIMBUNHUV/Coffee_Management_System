@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/auth_provider.dart';
-import 'package:coffee_shop_app/providers/product_provider.dart';
-import 'package:coffee_shop_app/widgets/coffee_card.dart';
+import 'package:vee_zee_coffee/providers/auth_provider.dart';
+import 'package:vee_zee_coffee/providers/product_provider.dart';
+import 'package:vee_zee_coffee/widgets/coffee_card.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});

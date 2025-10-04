@@ -1,3 +1,5 @@
+import 'package:vee_zee_coffee/models/product_model.dart';
+
 class CartItem {
   final int? id;
   final int customerId;
@@ -6,6 +8,7 @@ class CartItem {
   final String? customization;
   final String dateAdded;
   final double? price;
+  final Product? product;
 
   CartItem({
     this.id,
@@ -14,7 +17,7 @@ class CartItem {
     required this.quantity,
     this.customization,
     required this.dateAdded,
-    this.price,
+    this.price, this.product,
   });
 
   Map<String, dynamic> toMap() {

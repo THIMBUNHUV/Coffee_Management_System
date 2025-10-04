@@ -1,13 +1,13 @@
-import 'package:coffee_shop_app/models/product_model.dart';
+import 'package:vee_zee_coffee/models/product_model.dart';
 import 'package:flutter/material.dart';
-import 'package:coffee_shop_app/models/cart_model.dart';
-import 'package:coffee_shop_app/services/cart_service.dart';
-import 'package:coffee_shop_app/services/product_service.dart';
+import 'package:vee_zee_coffee/models/cart_model.dart';
+import 'package:vee_zee_coffee/services/cart_service.dart';
+import 'package:vee_zee_coffee/services/product_service.dart';
 
 class CartProvider with ChangeNotifier {
   final CartService _cartService = CartService();
   final ProductService _productService = ProductService();
-  
+
   List<CartItem> _cartItems = [];
   bool _isLoading = false;
   bool _isInitialLoad = true;
@@ -17,24 +17,24 @@ class CartProvider with ChangeNotifier {
   List<CartItem> get cartItems => _cartItems;
   bool get isLoading => _isLoading;
   bool get isInitialLoad => _isInitialLoad;
-  
+
   bool isItemLoading(int itemId) => _itemLoadingStates[itemId] ?? false;
 
-  Future<void> fetchCartItems(int customerId) async {
-    _setLoading(true);
-    try {
-      _cartItems = await _cartService.getCartItems(customerId);
-      _setLoading(false); // Set loading false immediately after cart items
-      
-      // Fetch products in background without blocking UI
-      _fetchProductsInBackground();
-      
-    } catch (e) {
-      _setLoading(false);
-      _isInitialLoad = false;
-      rethrow;
-    }
-  }
+  // Future<void> fetchCartItems(int customerId) async {
+  //   _setLoading(true);
+  //   try {
+  //     _cartItems = await _cartService.getCartItems(customerId);
+  //     _setLoading(false); // Set loading false immediately after cart items
+
+  //     // Fetch products in background without blocking UI
+  //     _fetchProductsInBackground();
+
+  //   } catch (e) {
+  //     _setLoading(false);
+  //     _isInitialLoad = false;
+  //     rethrow;
+  //   }
+  // }
 
   Future<void> _fetchProductsInBackground() async {
     try {
@@ -43,10 +43,10 @@ class CartProvider with ChangeNotifier {
           .map((item) => item.productId)
           .toSet()
           .toList();
-      
+
       if (productIdsToFetch.isNotEmpty) {
         await _fetchProductsByIds(productIdsToFetch);
-        
+
         // Update UI with product data when ready
         for (int i = 0; i < _cartItems.length; i++) {
           final product = _productsCache[_cartItems[i].productId];
@@ -56,7 +56,7 @@ class CartProvider with ChangeNotifier {
         }
         notifyListeners();
       }
-      
+
       _isInitialLoad = false;
       notifyListeners();
     } catch (e) {
@@ -85,20 +85,39 @@ class CartProvider with ChangeNotifier {
     return _productsCache[productId];
   }
 
-  Future<void> addToCart(CartItem cartItem) async {
+  // Future<void> addToCart(CartItem cartItem) async {
+  //   _setLoading(true);
+  //   try {
+  //     // Get product price if not provided
+  //     if (cartItem.price == null) {
+  //       final product = await _productService.getProductById(cartItem.productId);
+  //       cartItem = cartItem.copyWith(price: product?.price ?? 0);
+
+  //       // Add to cache
+  //       if (product != null) {
+  //         _productsCache[cartItem.productId] = product;
+  //       }
+  //     }
+
+  //     await _cartService.addToCart(cartItem);
+  //     await fetchCartItems(cartItem.customerId);
+  //   } catch (e) {
+  //     _setLoading(false);
+  //     rethrow;
+  //   }
+  // }
+
+  Future<void> addToCart(CartItem cartItem, Product product) async {
     _setLoading(true);
     try {
+      // Add product to cache
+      _productsCache[cartItem.productId] = product;
+
       // Get product price if not provided
       if (cartItem.price == null) {
-        final product = await _productService.getProductById(cartItem.productId);
-        cartItem = cartItem.copyWith(price: product?.price ?? 0);
-        
-        // Add to cache
-        if (product != null) {
-          _productsCache[cartItem.productId] = product;
-        }
+        cartItem = cartItem.copyWith(price: product.price ?? 0);
       }
-      
+
       await _cartService.addToCart(cartItem);
       await fetchCartItems(cartItem.customerId);
     } catch (e) {
@@ -107,50 +126,130 @@ class CartProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateQuantity(int cartItemId, int customerId, int newQuantity) async {
-    _setItemLoading(cartItemId, true);
-    
+  Future<void> fetchCartItems(int customerId) async {
+    _setLoading(true);
     try {
-      // Find the cart item and update locally first
-      final cartItemIndex = _cartItems.indexWhere((item) => item.id == cartItemId);
-      if (cartItemIndex != -1) {
-        // Create updated item with new quantity
-        final updatedItem = _cartItems[cartItemIndex].copyWith(quantity: newQuantity);
-        
-        // Update local state immediately
-        _cartItems[cartItemIndex] = updatedItem;
-        notifyListeners(); // This updates UI instantly without global loading
-        
-        // Then update in database (silently in background)
-        await _cartService.updateCartItem(updatedItem);
-        
-        // Verify sync without triggering loading
-        await _verifyCartSync(customerId);
+      _cartItems = await _cartService.getCartItems(customerId);
+
+      // Fetch product details for each cart item
+      for (var item in _cartItems) {
+        if (_productsCache[item.productId] == null) {
+          try {
+            final product = await _productService.getProductById(
+              item.productId,
+            );
+            if (product != null) {
+              _productsCache[item.productId] = product;
+            }
+          } catch (e) {
+            print('Error fetching product ${item.productId}: $e');
+          }
+        }
       }
+
+      notifyListeners();
     } catch (e) {
-      // If update fails, refresh from server to restore correct state
-      await fetchCartItems(customerId);
       rethrow;
     } finally {
-      _setItemLoading(cartItemId, false);
+      _setLoading(false);
     }
   }
 
-  Future<void> updateCartItem(CartItem cartItem) async {
+  Product? getProductForCartItem(int productId) {
+    return _productsCache[productId];
+  }
+
+  // Future<void> updateQuantity(int cartItemId, int customerId, int newQuantity) async {
+  //   _setItemLoading(cartItemId, true);
+
+  //   try {
+  //     // Find the cart item and update locally first
+  //     final cartItemIndex = _cartItems.indexWhere((item) => item.id == cartItemId);
+  //     if (cartItemIndex != -1) {
+  //       // Create updated item with new quantity
+  //       final updatedItem = _cartItems[cartItemIndex].copyWith(quantity: newQuantity);
+
+  //       // Update local state immediately
+  //       _cartItems[cartItemIndex] = updatedItem;
+  //       notifyListeners(); // This updates UI instantly without global loading
+
+  //       // Then update in database (silently in background)
+  //       await _cartService.updateCartItem(updatedItem);
+
+  //       // Verify sync without triggering loading
+  //       await _verifyCartSync(customerId);
+  //     }
+  //   } catch (e) {
+  //     // If update fails, refresh from server to restore correct state
+  //     await fetchCartItems(customerId);
+  //     rethrow;
+  //   } finally {
+  //     _setItemLoading(cartItemId, false);
+  //   }
+  // }
+
+  // Add this method to your CartProvider
+  Future<void> updateCartItemQuantity(
+    CartItem updatedItem,
+    int customerId,
+  ) async {
+    try {
+      // Update the item in the local list first for immediate UI update
+      final index = _cartItems.indexWhere((item) => item.id == updatedItem.id);
+      if (index != -1) {
+        _cartItems[index] = updatedItem;
+        notifyListeners(); // This will update the UI immediately
+      }
+
+      // Then update in the backend
+      await _cartService.updateCartItem(updatedItem);
+
+      // Optionally refresh to ensure sync with backend
+      // await fetchCartItems(customerId);
+    } catch (e) {
+      // If backend update fails, revert the local change
+      await fetchCartItems(customerId);
+      rethrow;
+    }
+  }
+
+  // Future<void> updateCartItem(CartItem cartItem) async {
+  //   _setLoading(true);
+  //   try {
+  //     await _cartService.updateCartItem(cartItem);
+  //     await fetchCartItems(cartItem.customerId);
+  //   } catch (e) {
+  //     _setLoading(false);
+  //     rethrow;
+  //   }
+  // }
+
+  // Future<void> removeFromCart(int id, int customerId) async {
+  //   _setLoading(true);
+  //   try {
+  //     await _cartService.removeFromCart(id);
+  //     await fetchCartItems(customerId);
+  //   } catch (e) {
+  //     _setLoading(false);
+  //     rethrow;
+  //   }
+  // }
+
+  Future<void> removeFromCart(int cartItemId, int customerId) async {
     _setLoading(true);
     try {
-      await _cartService.updateCartItem(cartItem);
-      await fetchCartItems(cartItem.customerId);
+      await _cartService.removeFromCart(cartItemId);
+      await fetchCartItems(customerId);
     } catch (e) {
       _setLoading(false);
       rethrow;
     }
   }
 
-  Future<void> removeFromCart(int id, int customerId) async {
+  Future<void> updateCartItem(CartItem updatedItem, int customerId) async {
     _setLoading(true);
     try {
-      await _cartService.removeFromCart(id);
+      await _cartService.updateCartItem(updatedItem);
       await fetchCartItems(customerId);
     } catch (e) {
       _setLoading(false);
@@ -174,7 +273,10 @@ class CartProvider with ChangeNotifier {
   }
 
   double get totalAmount {
-    return _cartItems.fold(0, (sum, item) => sum + (item.price ?? 0) * item.quantity);
+    return _cartItems.fold(
+      0,
+      (sum, item) => sum + (item.price ?? 0) * item.quantity,
+    );
   }
 
   int get itemCount {
@@ -195,7 +297,7 @@ class CartProvider with ChangeNotifier {
   Future<void> _verifyCartSync(int customerId) async {
     try {
       final latestItems = await _cartService.getCartItems(customerId);
-      
+
       // Only update if there's a mismatch (rare case)
       if (latestItems.length != _cartItems.length) {
         _cartItems = latestItems;

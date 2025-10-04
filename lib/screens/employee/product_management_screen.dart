@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/product_provider.dart';
-import 'package:coffee_shop_app/models/product_model.dart';
-import 'package:coffee_shop_app/services/image_service.dart';
+import 'package:vee_zee_coffee/providers/product_provider.dart';
+import 'package:vee_zee_coffee/models/product_model.dart';
+import 'package:vee_zee_coffee/services/image_service.dart';
 
 class ProductManagementScreen extends StatefulWidget {
   const ProductManagementScreen({super.key});

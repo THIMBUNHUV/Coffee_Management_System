@@ -1,4 +1,4 @@
-import 'package:coffee_shop_app/utils/constants.dart';
+import 'package:vee_zee_coffee/utils/constants.dart';
 import 'package:intl/intl.dart';
 
 class Helpers {

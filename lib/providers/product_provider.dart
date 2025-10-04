@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:coffee_shop_app/models/category_model.dart';
-import 'package:coffee_shop_app/models/product_model.dart';
-import 'package:coffee_shop_app/services/product_service.dart';
+import 'package:vee_zee_coffee/models/category_model.dart';
+import 'package:vee_zee_coffee/models/product_model.dart';
+import 'package:vee_zee_coffee/services/product_service.dart';
 
 class ProductProvider with ChangeNotifier {
   final ProductService _productService = ProductService();

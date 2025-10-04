@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:coffee_shop_app/widgets/custom_input.dart';
-import 'package:coffee_shop_app/utils/validators.dart';
+import 'package:vee_zee_coffee/widgets/custom_input.dart';
+import 'package:vee_zee_coffee/utils/validators.dart';
 
 class DeliveryScreen extends StatefulWidget {
   const DeliveryScreen({super.key});

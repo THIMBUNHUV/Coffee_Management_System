@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coffee_shop_app/config/database_helper.dart';
+import 'package:vee_zee_coffee/config/database_helper.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});

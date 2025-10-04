@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:coffee_shop_app/config/database_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:coffee_shop_app/models/customer_model.dart';
-import 'package:coffee_shop_app/models/employee_model.dart';
-import 'package:coffee_shop_app/models/owner_model.dart';
-import 'package:coffee_shop_app/services/auth_service.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:vee_zee_coffee/config/database_helper.dart';
+import 'package:vee_zee_coffee/models/customer_model.dart';
+import 'package:vee_zee_coffee/models/employee_model.dart';
+import 'package:vee_zee_coffee/models/owner_model.dart';
+import 'package:vee_zee_coffee/services/auth_service.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -70,6 +70,111 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
+  // ========== PASSWORD RESET METHODS ==========
+
+  Future<bool> forgotPassword(String email) async {
+    _setLoading(true);
+    try {
+      final dbHelper = DatabaseHelper();
+
+      // Check if email exists in database
+      final customer = await dbHelper.getCustomerByEmail(email);
+      final employee = await dbHelper.getEmployeeByEmail(email);
+      final owner = await dbHelper.getOwnerByEmail(email);
+
+      if (customer == null && employee == null && owner == null) {
+        _setLoading(false);
+        print('❌ Email not found: $email');
+        return false; // Email doesn't exist
+      }
+
+      // Simulate sending email (in real app, integrate with email service)
+      await Future.delayed(const Duration(seconds: 2));
+
+      // Log the reset request
+      print('✅ Password reset email sent to: $email');
+      print(
+        '📧 User type: ${customer != null
+            ? 'Customer'
+            : employee != null
+            ? 'Employee'
+            : 'Owner'}',
+      );
+
+      _setLoading(false);
+      return true; // Email sent successfully
+    } catch (e) {
+      _setLoading(false);
+      print('❌ Error in forgotPassword: $e');
+      return false;
+    }
+  }
+
+  Future<bool> resetPassword(String email, String newPassword) async {
+    _setLoading(true);
+    try {
+      final dbHelper = DatabaseHelper();
+
+      // Check customer
+      final customer = await dbHelper.getCustomerByEmail(email);
+      if (customer != null) {
+        final updatedCustomer = customer.copyWith(password: newPassword);
+        await dbHelper.updateCustomer(updatedCustomer);
+        _setLoading(false);
+        print('✅ Customer password reset for: $email');
+        return true;
+      }
+
+      // Check employee
+      final employee = await dbHelper.getEmployeeByEmail(email);
+      if (employee != null) {
+        final updatedEmployee = employee.copyWith(password: newPassword);
+        await dbHelper.updateEmployee(updatedEmployee);
+        _setLoading(false);
+        print('✅ Employee password reset for: $email');
+        return true;
+      }
+
+      // Check owner
+      final owner = await dbHelper.getOwnerByEmail(email);
+      if (owner != null) {
+        final updatedOwner = owner.copyWith(password: newPassword);
+        await dbHelper.updateOwner(updatedOwner);
+        _setLoading(false);
+        print('✅ Owner password reset for: $email');
+        return true;
+      }
+
+      _setLoading(false);
+      print('❌ No user found with email: $email');
+      return false; // User not found
+    } catch (e) {
+      _setLoading(false);
+      print('❌ Error resetting password: $e');
+      return false;
+    }
+  }
+
+  // Helper method to check email existence
+  Future<String?> getUserTypeByEmail(String email) async {
+    try {
+      final dbHelper = DatabaseHelper();
+
+      final customer = await dbHelper.getCustomerByEmail(email);
+      if (customer != null) return 'customer';
+
+      final employee = await dbHelper.getEmployeeByEmail(email);
+      if (employee != null) return 'employee';
+
+      final owner = await dbHelper.getOwnerByEmail(email);
+      if (owner != null) return 'owner';
+
+      return null;
+    } catch (e) {
+      print('❌ Error checking user type by email: $e');
+      return null;
+    }
+  }
 
   // Employee Authentication
   Future<bool> loginEmployee(String email, String password) async {
@@ -88,7 +193,6 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
-
 
   // ========== IMAGE MANAGEMENT ==========
 
@@ -195,7 +299,6 @@ class AuthProvider with ChangeNotifier {
     }
     return null;
   }
-
 
   // Owner image management
   Future<void> saveOwnerImage(File imageFile) async {

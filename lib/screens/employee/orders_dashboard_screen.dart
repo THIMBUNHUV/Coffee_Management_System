@@ -1,9 +1,9 @@
-import 'package:coffee_shop_app/models/order_model.dart';
+import 'package:vee_zee_coffee/models/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/order_provider.dart';
-import 'package:coffee_shop_app/widgets/order_card.dart';
-import 'package:coffee_shop_app/config/routes.dart';
+import 'package:vee_zee_coffee/providers/order_provider.dart';
+import 'package:vee_zee_coffee/widgets/order_card.dart';
+import 'package:vee_zee_coffee/config/routes.dart';
 
 class OrdersDashboardScreen extends StatefulWidget {
   const OrdersDashboardScreen({super.key});

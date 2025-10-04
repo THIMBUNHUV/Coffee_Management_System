@@ -1,10 +1,10 @@
-import 'package:coffee_shop_app/config/routes.dart';
-import 'package:coffee_shop_app/models/order_model.dart';
+import 'package:vee_zee_coffee/config/routes.dart';
+import 'package:vee_zee_coffee/models/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_shop_app/providers/order_provider.dart';
-import 'package:coffee_shop_app/providers/auth_provider.dart';
-import 'package:coffee_shop_app/widgets/status_indicator.dart';
+import 'package:vee_zee_coffee/providers/order_provider.dart';
+import 'package:vee_zee_coffee/providers/auth_provider.dart';
+import 'package:vee_zee_coffee/widgets/status_indicator.dart';
 
 class OrderTrackingScreen extends StatefulWidget {
   const OrderTrackingScreen({super.key});

@@ -1,7 +1,7 @@
-import 'package:coffee_shop_app/config/database_helper.dart';
-import 'package:coffee_shop_app/models/customer_model.dart';
-import 'package:coffee_shop_app/models/employee_model.dart';
-import 'package:coffee_shop_app/models/owner_model.dart';
+import 'package:vee_zee_coffee/config/database_helper.dart';
+import 'package:vee_zee_coffee/models/customer_model.dart';
+import 'package:vee_zee_coffee/models/employee_model.dart';
+import 'package:vee_zee_coffee/models/owner_model.dart';
 
 class AuthService {
   final DatabaseHelper _dbHelper = DatabaseHelper();

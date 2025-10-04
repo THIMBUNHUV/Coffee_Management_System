@@ -66,4 +66,18 @@ class Owner {
       profileImagePath: profileImagePath ?? this.profileImagePath,
     );
   }
+
+  // Add this factory constructor to your Owner class
+factory Owner.empty() {
+  return Owner(
+    id: null,
+    name: '',
+    email: '',
+    password: '',
+    phone: null,
+    businessName: null,
+    businessAddress: null,
+   
+  );
+}
 }

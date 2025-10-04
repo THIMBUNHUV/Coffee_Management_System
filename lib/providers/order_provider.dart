@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:coffee_shop_app/models/order_model.dart';
-import 'package:coffee_shop_app/services/order_service.dart';
+import 'package:vee_zee_coffee/models/order_model.dart';
+import 'package:vee_zee_coffee/services/order_service.dart';
 
 class OrderProvider with ChangeNotifier {
   final OrderService _orderService = OrderService();
